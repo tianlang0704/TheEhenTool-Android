@@ -1,0 +1,5 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="round_corner_linear_layout_radius">4dp</dimen>
+    <dimen name="preview_rec_view_cell_margin">4dp</dimen>
+</resources>

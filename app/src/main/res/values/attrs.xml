@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundCornerLinearLayout">
+        <attr name="CornerRadius" format="dimension" />
+        <attr name="ShadowLeft" format="dimension" />
+        <attr name="ShadowRight" format="dimension" />
+        <attr name="ShadowTop" format="dimension" />
+        <attr name="ShadowBottom" format="dimension" />
+        <attr name="ShadowColor" format="color" />
+    </declare-styleable>
+</resources>
