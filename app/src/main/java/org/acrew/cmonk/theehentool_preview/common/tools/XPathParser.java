@@ -1,11 +1,8 @@
 package org.acrew.cmonk.theehentool_preview.common.tools;
 
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.androidnetworking.AndroidNetworking;
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.rx2androidnetworking.Rx2AndroidNetworking;
 
 import org.htmlcleaner.HtmlCleaner;
@@ -22,8 +19,6 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by CMonk on 2/6/2017.
@@ -31,23 +26,23 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class XPathParser {
     static public class ParseConfig {
-        @NonNull String xPathString;
-        @NonNull String defaultValue;
+        @NonNull String m_XPathString;
+        @NonNull String m_DefaultValue;
         public ParseConfig(@NonNull String xPathString, @NonNull String defaultValue) {
-            this.xPathString = xPathString;
-            this.defaultValue = defaultValue;
+            m_XPathString = xPathString;
+            m_DefaultValue = defaultValue;
         }
     }
 
-    @NonNull private HashMap<String, ParseConfig> parseConfig = new HashMap<>();
+    @NonNull private HashMap<String, ParseConfig> m_ParseConfig = new HashMap<>();
 
     public void AddParseConfig(@NonNull String key, @NonNull ParseConfig config){
-        parseConfig.put(key, config);
+        m_ParseConfig.put(key, config);
     }
 
     public Observable<ArrayList<HashMap<String, String>>> PromiseToParseListInURL(String urlString, final String listXPath) {
         return XPathParser.PromiseToGetString(urlString)
-        .map(s -> Parse(s, listXPath, parseConfig));
+        .flatMap(s -> PromiseToParse(s, listXPath, m_ParseConfig));
     }
 
     public static Observable<String> PromiseToGetString(final String urlString) {
@@ -81,9 +76,17 @@ public class XPathParser {
         });
     }
 
+    public static Observable<ArrayList<HashMap<String, String>>> PromiseToParse(
+            @NonNull String html,
+            @NonNull String listXPath,
+            @NonNull Map<String, ParseConfig> config
+    ) {
+        return Observable.defer(() -> Observable.just(Parse(html, listXPath, config)));
+    }
+
     public static ArrayList<HashMap<String, String>> Parse(
             @NonNull String html,
-            @NonNull String ListXPath,
+            @NonNull String listXPath,
             @NonNull Map<String, ParseConfig> config
     ) {
         HtmlCleaner cleaner = new HtmlCleaner();
@@ -91,7 +94,7 @@ public class XPathParser {
         ArrayList<HashMap<String, String>> results = new ArrayList<>();
 
         try {
-            Object[] nodes = doc.evaluateXPath(ListXPath);
+            Object[] nodes = doc.evaluateXPath(listXPath);
             for (Object i: nodes) {
                 if (!(i instanceof TagNode)) { continue; }
                 TagNode node = (TagNode) i;
@@ -100,8 +103,8 @@ public class XPathParser {
                 for (Map.Entry<String, ParseConfig> entry: config.entrySet()) {
                     //Check config information
                     String key = entry.getKey();
-                    String itemXPath = entry.getValue().xPathString;
-                    String defaultValue = entry.getValue().defaultValue;
+                    String itemXPath = entry.getValue().m_XPathString;
+                    String defaultValue = entry.getValue().m_DefaultValue;
                     if (key == null) { continue; }
 
                     //Parse the html

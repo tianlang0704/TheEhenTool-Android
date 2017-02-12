@@ -1,8 +1,5 @@
 package org.acrew.cmonk.theehentool_preview.preview.controller;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,18 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.acrew.cmonk.theehentool_preview.R;
-import org.acrew.cmonk.theehentool_preview.common.tools.XPathParser;
 import org.acrew.cmonk.theehentool_preview.preview.data.PreviewData;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PreviewFragment extends Fragment implements PreviewDataFetcherDelegate {
-    public RecyclerView previewRecView;
+    private PreviewDataFetcher m_Fetcher = PreviewDataFetcher.singleton;
 
-    private PreviewDataFetcher fetcher = PreviewDataFetcher.singleton;
-
+    public RecyclerView m_PreviewRecView;
     public PreviewFragment() {
         // Required empty public constructor
     }
@@ -40,22 +33,22 @@ public class PreviewFragment extends Fragment implements PreviewDataFetcherDeleg
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.preview_fragment, container, false);
         this.InitializeRecView(view);
-        this.fetcher.SetDelegate(this);
-        this.fetcher.FetchData();
+        this.m_Fetcher.SetDelegate(this);
+        this.m_Fetcher.FetchData();
 
         return view;
     }
 
     private void InitializeRecView(View view) {
-        this.previewRecView = (RecyclerView) view.findViewById(R.id.preview_rec_view);
-        this.previewRecView.setAdapter(new PreviewRecViewAdapter(new ArrayList<>(), this.getContext()));
-        this.previewRecView.setLayoutManager(new StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL));
+        this.m_PreviewRecView = (RecyclerView) view.findViewById(R.id.preview_rec_view);
+        this.m_PreviewRecView.setAdapter(new PreviewRecViewAdapter(new ArrayList<>(), this.getContext()));
+        this.m_PreviewRecView.setLayoutManager(new StaggeredGridLayoutManager(3, GridLayoutManager.VERTICAL));
     }
 
 
     @Override
     public void FetchComplete(ArrayList<PreviewData> data) {
-        this.getActivity().runOnUiThread(() -> previewRecView.setAdapter(new PreviewRecViewAdapter(data, getContext())));
+        this.getActivity().runOnUiThread(() -> m_PreviewRecView.setAdapter(new PreviewRecViewAdapter(data, getContext())));
         Log.wtf("wtf", data.toString());
     }
 }

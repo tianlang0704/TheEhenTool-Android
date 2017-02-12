@@ -18,50 +18,50 @@ import java.util.ArrayList;
  */
 
 public class PreviewRecViewAdapter extends RecyclerView.Adapter<PreviewViewHolder> {
-    ArrayList<PreviewData> data;
-    LayoutInflater inflater;
+    ArrayList<PreviewData> m_Data;
+    LayoutInflater m_Inflater;
 
 
     public PreviewRecViewAdapter(@NonNull ArrayList<PreviewData> data, @NonNull Context context) {
-        this.data = data;
-        this.inflater = LayoutInflater.from(context);
+        this.m_Data = data;
+        this.m_Inflater = LayoutInflater.from(context);
     }
 
     @Override
     public PreviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = this.inflater.inflate(R.layout.preview_cell_view, parent, false);
+        View view = this.m_Inflater.inflate(R.layout.preview_cell_view, parent, false);
         return new PreviewViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(PreviewViewHolder holder, int position) {
-        PreviewData item = data.get(position);
-        holder.SetThumbImage(item.thumbBitmap);
-        holder.SetTitleText(item.title);
+        PreviewData item = m_Data.get(position);
+        holder.SetThumbImage(item.m_ThumbBitmap);
+        holder.SetTitleText(item.m_Title);
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return m_Data.size();
     }
 }
 
 class PreviewViewHolder extends RecyclerView.ViewHolder {
-    private TextView titleLabel;
-    private ImageView thumbImage;
+    private TextView m_TitleLabel;
+    private ImageView m_ThumbImage;
 
     public PreviewViewHolder(View itemView) {
         super(itemView);
 
-        this.titleLabel = (TextView) itemView.findViewById(R.id.preview_cell_title);
-        this.thumbImage = (ImageView) itemView.findViewById(R.id.preview_cell_thumb_image);
+        this.m_TitleLabel = (TextView) itemView.findViewById(R.id.preview_cell_title);
+        this.m_ThumbImage = (ImageView) itemView.findViewById(R.id.preview_cell_thumb_image);
     }
 
     public void SetTitleText(String str) {
-        this.titleLabel.setText(str);
+        this.m_TitleLabel.setText(str);
     }
 
     public void SetThumbImage(Bitmap bitmap) {
-        this.thumbImage.setImageBitmap(bitmap);
+        this.m_ThumbImage.setImageBitmap(bitmap);
     }
 }

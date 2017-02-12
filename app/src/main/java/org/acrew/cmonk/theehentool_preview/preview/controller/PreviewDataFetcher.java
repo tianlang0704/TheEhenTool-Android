@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.acrew.cmonk.theehentool_preview.common.tools.Downloader;
 import org.acrew.cmonk.theehentool_preview.common.tools.EHenConfigHelper;
+import org.acrew.cmonk.theehentool_preview.common.tools.SearchConfigHelper;
 import org.acrew.cmonk.theehentool_preview.common.tools.XPathParser;
 import org.acrew.cmonk.theehentool_preview.preview.data.PreviewData;
 
@@ -13,10 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -28,19 +27,23 @@ interface PreviewDataFetcherDelegate {
 }
 
 public class PreviewDataFetcher {
-    private PreviewDataFetcherDelegate delegate;
-    private ArrayList<PreviewData> data = new ArrayList<>();
-    private XPathParser parser = new XPathParser();
-    private EHenConfigHelper ehenConfig = EHenConfigHelper.singleton;
+    private PreviewDataFetcherDelegate m_Delegate;
+    private ArrayList<PreviewData> m_Data = new ArrayList<>();
+    private XPathParser m_Parser = new XPathParser();
+    private EHenConfigHelper m_EhenConfig = EHenConfigHelper.singleton;
+    private SearchConfigHelper m_SearchConfig = SearchConfigHelper.singleton;
 
     private int order = 0;
 
     public void FetchData() {
-        parser.AddParseConfig("ImageBitmapURL", new XPathParser.ParseConfig(ehenConfig.previewThumbXPath, ""));
-        parser.PromiseToParseListInURL("https://e-hentai.org/?inline_set=dm_t&f_non-h=1&f_apply=Apply+Filter", ehenConfig.previewListXPath)
+        m_SearchConfig.SetConfiguration(SearchConfigHelper.Options.NONH, true);
+        String searchString = m_SearchConfig.GetSearchURL("");
+
+        m_Parser.AddParseConfig("ImageBitmapURL", new XPathParser.ParseConfig(m_EhenConfig.m_PreviewThumbXPath, ""));
+        m_Parser.PromiseToParseListInURL(searchString, m_EhenConfig.m_PreviewListXPath)
         .flatMap((results) -> {
             for (HashMap<String, String> item: results) {
-                data.add(new PreviewData(order, "", item.get("ImageBitmapURL"), null));
+                m_Data.add(new PreviewData(order, "", item.get("ImageBitmapURL"), null));
             }
 
             Downloader dl = new Downloader();
@@ -64,21 +67,21 @@ public class PreviewDataFetcher {
             @Override
             public void onNext(List<Bitmap> bitmaps) {
                 for (int i = 0; i < bitmaps.size(); i++) {
-                    data.get(i).thumbBitmap = bitmaps.get(i);
+                    m_Data.get(i).m_ThumbBitmap = bitmaps.get(i);
                 }
             }
 
             @Override
             public void onComplete() {
-                if (delegate != null) {
-                    delegate.FetchComplete(data);
+                if (m_Delegate != null) {
+                    m_Delegate.FetchComplete(m_Data);
                 }
             }
         });
     }
 
     public void SetDelegate(PreviewDataFetcherDelegate delegate) {
-        this.delegate = delegate;
+        this.m_Delegate = delegate;
     }
 
     public static final PreviewDataFetcher singleton = new PreviewDataFetcher();

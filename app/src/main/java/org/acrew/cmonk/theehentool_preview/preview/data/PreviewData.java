@@ -9,10 +9,10 @@ import java.util.ArrayList;
  */
 
 public class PreviewData {
-    public int order;
-    public String title;
-    public String thumbURL;
-    public Bitmap thumbBitmap;
+    public int m_Order;
+    public String m_Title;
+    public String m_ThumbURL;
+    public Bitmap m_ThumbBitmap;
 
     public PreviewData(
             int order,
@@ -20,9 +20,9 @@ public class PreviewData {
             String thumbURL,
             Bitmap thumbBitmap
     ) {
-        this.order = order;
-        this.title = title;
-        this.thumbURL = thumbURL;
-        this.thumbBitmap = thumbBitmap;
+        m_Order = order;
+        m_Title = title;
+        m_ThumbURL = thumbURL;
+        m_ThumbBitmap = thumbBitmap;
     }
 }
