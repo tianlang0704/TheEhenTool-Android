@@ -1,6 +1,8 @@
 # TheEhenTool-Android (Preview)
 This is the Android version of TheEhenTool (Preview)
 
+[![Build Status](https://travis-ci.org/tianlang0704/TheEhenTool-Android.svg?branch=TravisCI)](https://travis-ci.org/tianlang0704/TheEhenTool-Android)
+
 This is a temporary message:
 Currently in very early development, please take your own risks on trying, I'm not responsible for any damage or lose.
 More information will come in a few days
