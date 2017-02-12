@@ -11,6 +11,7 @@ android:
     - extra-android-support
     - extra-android-m2repository
     - android-19
+    - android-25
 script:
   - ./gradlew build connectedCheck
 before_install:
