@@ -4,13 +4,11 @@ jdk:
 sudo: false
 android:
   components:
-    - tools
     - build-tools-25.0.2
     - platform-tools
     - extra-google-m2repository
     - extra-android-support
     - extra-android-m2repository
-    - android-19
     - android-25
 script:
   - ./gradlew build connectedCheck
