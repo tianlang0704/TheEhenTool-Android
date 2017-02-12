@@ -5,12 +5,12 @@ sudo: false
 ndroid:
   components:
     - tools
-    - platform-tools
-    - android-19
     - build-tools-25.0.2
+    - platform-tools
     - extra-google-m2repository
     - extra-android-support
     - extra-android-m2repository
+    - android-19
 script:
   - ./gradlew build connectedCheck
 before_install:
